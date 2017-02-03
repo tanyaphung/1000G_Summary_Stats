@@ -10,10 +10,10 @@ usage()
 echo 'The goal of this script is to output the genotypes from the VCF file. In other words, from the VCF files, the output should be CHROM POS GT(ind1) GT(ind2) GT(ind3) etc. Note that here I hard-code the individual names here, so to reuse this script, one needs to replace the array with the appropriate names for their individuals. 
 TODO: modify the script so that instead of hard-code the individual names, take in an input file.
 Here is how to use the script:
-./obtain_GTFromVCF.sh Name BamFile OutputDir BamDir'
+./obtain_GTFromVCF.sh'
 exit
 }
-if [ "$#" -le 1 ]
+if [ "$#" -eq 1 ]
 then
   usage
 fi
