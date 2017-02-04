@@ -8,7 +8,7 @@ for i in range(1, num+1):
 	autosome_eta[i] = 0
 
 for i in range(1,23):
-	filename = "/u/home/p/phung428/tanya_data_storage/1000G_Summary_Stats/results/foldedSFS/CEU/chr%d_foldedSFS.txt" %i
+	filename = "/u/home/p/phung428/tanya_data_storage/1000G_Summary_Stats/results/foldedSFS/CHB/chr%d_foldedSFS.txt" %i
 	with open(filename, "r") as f:
 		for line in f:
 			line = line.rstrip("\n")
