@@ -57,6 +57,7 @@ done;
 
 1. All functions required to compute genetic diversity can be found in scripts/compute_pi
 2. Explanation of each function:
+
 # callableEachWin.py
 This script tabulates the number of callable sites for each nonoverlapping window.
 Input 1: a list where each item in the list is a tuple of the form (start, end).
