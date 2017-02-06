@@ -38,7 +38,7 @@ To subset the 1000G vcf for each of these populations:
 3. Genetic map: Decode
 4. Human diversity: YRI; Individuals: All; Mask: Strict
 
-** NOTE: when selecting human diversity, one has to choose either CEU, YRI, or CHB. The neutral regions will likely differ depending which population to choose. Therefore, should we have a consensus neutral regions for all three populations? 
+** NOTE: when selecting human diversity, one has to choose either CEU, YRI, or CHB. The neutral regions will likely differ depending which population to choose. Therefore, should we have a consensus neutral regions for all three populations? **
 
 
 
