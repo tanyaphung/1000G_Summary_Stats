@@ -40,5 +40,18 @@ To subset the 1000G vcf for each of these populations:
 
 **NOTE: when selecting human diversity, one has to choose either CEU, YRI, or CHB. The neutral regions will likely differ depending which population to choose. Therefore, should we have a consensus neutral regions for all three populations?**
 
+## Obtain nonoverlapping windows
+1. 
+>wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.chrom.sizes
+
+
+2. 
+>for chrNum in {1..22}; do
+grep -w "chr${chrNum}" hg19.chrom.sizes > chr${chrNum}.g
+done;
+
+3. 
+>./makeWindows.sh 100000 100kb
+
 
 
