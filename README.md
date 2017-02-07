@@ -21,6 +21,42 @@ To subset the 1000G vcf for each of these populations:
 
 *Note that currenly the script is set up to run on UCLA Hoffman HPC*
 
+## Estimate a site-frequency-spectrum from the VCF
+
+* Use the Python script generate_foldedSFS_fromVCF.py
+* For usage:
+
+>python generate_foldedSFS_fromVCF.py -h
+
+usage: generate_foldedSFS_fromVCF.py [-h] --variant VARIANT --numAllele
+                                     NUMALLELE --pass_coordinates
+                                     PASS_COORDINATES --outfile OUTFILE
+
+This script generates the count for a folded SFS from VCF
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --variant VARIANT     REQUIRED. Variant file. The format should be CHROM POS
+                        ind1 ind2 etc. Should be tab delimit. Because of VCF
+                        format, it is 1-based
+  --numAllele NUMALLELE
+                        REQUIRED. Indicate the number of alleles, which is
+                        equal to the number of individuals in your sample
+                        times 2.
+  --pass_coordinates PASS_COORDINATES
+                        REQUIRED. Input is the file that lists the coordinates
+                        (1-based) that are annotated as P (pass) from the
+                        masks file. This file is generated from the script
+                        obtain_pass_positions.py. The format is a genomic
+                        coordinate per line.
+  --outfile OUTFILE     REQUIRED. Name of the output file
+
+* For the exact file names and command, the files
+
++ wrapper_generate.foldedSFS.fromVCF_YRI.sh
++ wrapper_generate.foldedSFS.fromVCF_CEU.sh
++ wrapper_generate.foldedSFS.fromVCF_CHB.sh
+
 ## Extract neutral regions using the program Neutral Region Explorer [Arbiza et al. 2012](http://nre.cb.bscb.cornell.edu/nre/)
 ### Filtering criteria:
 ##### Select Regions to Exclude: 
