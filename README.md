@@ -84,3 +84,9 @@ This script computes pairwise pi.
 
 >python main.py --windows /path/to/window/file --callableSet /path/to/callableSet --variants /path/to/variants --numAllele int --outfile /path/to/outfile
 
+## Estimate LD decay
+### Remove variants from the VCF files where the genotypes of all the individuals in the subset are 0|0
+* vcftools subset is used to subset 10 YRI individuals, 10 CEU individuals, and 10 CHB individuals from 1000 Genome VCF file. However, the problem was that this does not remove variants where the genotypes for all of the subset individuals are 0|0. 
+* When dealing with this previously when estimating the SFS, I wrote it directly into the Python script generate_foldedSFS_fromVCF.py. 
+* However, here, it is better to deal with this using grep. Basically, if the genotypes for all of the individuals are 0|0, the AC will be equal to 0. I can use grep to remove it. 
+* The script is 
