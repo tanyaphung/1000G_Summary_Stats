@@ -52,10 +52,9 @@ optional arguments:
   --outfile OUTFILE     REQUIRED. Name of the output file
 
 * For the exact file names and command, the files
-
-+ wrapper_generate.foldedSFS.fromVCF_YRI.sh
-+ wrapper_generate.foldedSFS.fromVCF_CEU.sh
-+ wrapper_generate.foldedSFS.fromVCF_CHB.sh
+  + wrapper_generate.foldedSFS.fromVCF_YRI.sh
+  + wrapper_generate.foldedSFS.fromVCF_CEU.sh
+  + wrapper_generate.foldedSFS.fromVCF_CHB.sh
 
 ## Extract neutral regions using the program Neutral Region Explorer [Arbiza et al. 2012](http://nre.cb.bscb.cornell.edu/nre/)
 ### Filtering criteria:
