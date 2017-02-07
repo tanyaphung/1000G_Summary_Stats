@@ -53,5 +53,34 @@ done;
 3. 
 >./makeWindows.sh 100000 100kb
 
+## Compute genetic diversity (pairwise pi) in 100kb nonoverlapping windows
 
+1. All functions required to compute genetic diversity can be found in scripts/compute_pi
+2. Explanation of each function:
+
+### callableEachWin.py
+This script tabulates the number of callable sites for each nonoverlapping window.
+Input 1: a list where each item in the list is a tuple of the form (start, end).
+Input 2: a set where each item is the callable position (1-based).
+Return: a dictionary where key is window in the form (start, end) and value is the count of callable sites.
+
+### processVCFsubset.py
+This script cleans the VCF after subsetting. Specifically, it will (1) remove any site where the genotype for all subsetted individuals is 0|0. The reason for this is that vcf-subset does not do this automatically, (2) only keep the biallelic allele, in other words, remove 1|2, 2|1, and 2|2, and (3) remove any site that is not callable, meaning where it is not annotated with a P in the mask file.
+Input 1: a list. Each item in this list is a list where the first item is the genomic position (1-based).
+Input 2: a set where each item is the callable position (1-based).
+Return: a list. Each item in this list is a list where the first item is the genomic position (1-based). Basically the same as Input 1 but fewer variants.
+
+### computeAF.py
+This script computes the allele frequency for each variant.
+
+### computePi.py
+This script computes pairwise pi. 
+3. How to run?
+### For a list of inputs, do:
+
+>python main.py -h 
+
+### To run, do:
+
+>python main.py --windows /path/to/window/file --callableSet /path/to/callableSet --variants /path/to/variants --numAllele int --outfile /path/to/outfile
 
