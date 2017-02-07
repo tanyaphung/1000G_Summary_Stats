@@ -90,3 +90,13 @@ This script computes pairwise pi.
 * When dealing with this previously when estimating the SFS, I wrote it directly into the Python script generate_foldedSFS_fromVCF.py. 
 * However, here, it is better to deal with this using grep. Basically, if the genotypes for all of the individuals are 0|0, the AC will be equal to 0. I can use grep to remove it. 
 * The script is rmHomozygous_from_subsetVCF.sh
+
+### Use vcftools to calculate rsquared
+
+>vcftools --vcf <input vcf> --hap-r2 --ld-window-bp 100000
+
+>./vcftools_ld_YRI.sh
+
+>./vcftools_ld_CEU.sh
+
+>./vcftools_ld_CHB.sh
