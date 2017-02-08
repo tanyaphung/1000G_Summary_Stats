@@ -124,7 +124,13 @@ This script computes pairwise pi.
 * vcftools subset is used to subset 10 YRI individuals, 10 CEU individuals, and 10 CHB individuals from 1000 Genome VCF file. However, the problem was that this does not remove variants where the genotypes for all of the subset individuals are 0|0. 
 * When dealing with this previously when estimating the SFS, I wrote it directly into the Python script generate_foldedSFS_fromVCF.py. 
 * However, here, it is better to deal with this using grep. Basically, if the genotypes for all of the individuals are 0|0, the AC will be equal to 0. I can use grep to remove it. 
-* The script is rmHomozygous_from_subsetVCF.sh
+
+>./rmHomozygous_from_subsetVCF.sh
+
+### Remove variants from the VCF files where the variant is a singleton
+* grep out variants where AC=1
+
+>./rmSingletons_from_subsetVCF.sh
 
 ### Use vcftools to calculate rsquared
 
