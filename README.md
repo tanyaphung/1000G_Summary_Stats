@@ -128,7 +128,7 @@ This script computes pairwise pi.
 >./rmHomozygous_from_subsetVCF.sh
 
 ### Remove variants from the VCF files where the variant is a singleton
-* grep out variants where AC=1
+* grep out variants where AC==1 AND where AC==19
 
 >./rmSingletons_from_subsetVCF.sh
 
