@@ -149,3 +149,29 @@ This script does the following:
 * Remove nan
 * Compute distance between SNPs, output only distance and rsquare
 
+2. To compute rsquared in bins:
+
+>python estimateLDdecay.py -h
+
+usage: estimateLDdecay.py [-h] --input INPUT --format FORMAT --bin BIN
+                          --outfile OUTFILE
+
+This script estimates LD decay in bins. Bins can be specified by user
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --input INPUT      REQUIRED. Input file. This is usually output from plink
+                     or vcftools.
+  --format FORMAT    REQUIRED. Enter plink or vcftools. Specify which file
+                     format
+  --bin BIN          REQUIRED. Specify the number of bins
+  --outfile OUTFILE  REQUIRED. Name of output file.
+  
+  
+>./wrapper_estimateLDdecay_YRI.sh
+
+>./wrapper_estimateLDdecay_CEU.sh
+
+>./wrapper_estimateLDdecay_CHB.sh
+
+>python tabulateMeanLD.py
