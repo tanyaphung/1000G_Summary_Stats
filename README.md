@@ -148,7 +148,9 @@ This script computes pairwise pi.
 This script does the following:
 * Remove nan
 
+
 2. To compute rsquared in bins:
+
 
 >python estimateLDdecay.py -h
 
