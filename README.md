@@ -147,7 +147,6 @@ This script computes pairwise pi.
 
 This script does the following:
 * Remove nan
-* Compute distance between SNPs, output only distance and rsquare
 
 2. To compute rsquared in bins:
 
