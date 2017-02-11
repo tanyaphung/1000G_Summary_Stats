@@ -143,9 +143,9 @@ This script computes pairwise pi.
 >./vcftools_ld_CHB.sh
 
 ### Process files after VCFtools output
+
 1. ./processVCFLDoutputs.sh
-* This script does the following:
-* Remove nan
+Remove nan
 
 2. To compute rsquared in bins:
 
