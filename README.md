@@ -175,3 +175,15 @@ optional arguments:
 >./wrapper_estimateLDdecay_CHB.sh
 
 >python tabulateMeanLD.py
+
+### Use vcftools to calculate rsquared with different options
+
+* Instead of using the option --hap-r2, use the option --geno-r2 and --mac 2
+
+>./vcftools_ld_YRI_geno.sh
+
+>./qsub vcftools_ld_CEU_geno.sh
+
+>./qsub vcftools_ld_CHB_geno.sh 
+
+
