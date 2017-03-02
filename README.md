@@ -56,7 +56,7 @@ optional arguments:
   + wrapper_generate.foldedSFS.fromVCF_CEU.sh
   + wrapper_generate.foldedSFS.fromVCF_CHB.sh
 
-## Extract neutral regions using the program Neutral Region Explorer [Arbiza et al. 2012](http://nre.cb.bscb.cornell.edu/nre/)
+## Extract neutral regions using the program Neutral Region Explorer [Arbiza et al. 2012](http://nre.cb.bscb.cornell.edu/nre/). Output can be found in the directory data/10kb_neutral_regions.
 ### Filtering criteria:
 ##### Select Regions to Exclude: 
 1. Known genes 
@@ -74,6 +74,31 @@ optional arguments:
 4. Human diversity: YRI; Individuals: All; Mask: Strict
 
 **NOTE: when selecting human diversity, one has to choose either CEU, YRI, or CHB. The neutral regions will likely differ depending which population to choose. Therefore, should we have a consensus neutral regions for all three populations?**
+
+5. Min BG selection coefficient: 0.95
+
+##### Select regions for which to calculate % overlap
+1. Simple repeats
+2. Repeat maskers v3.27
+3. 46 way conserved - plac mammal
+
+** Output from the neutral region explorer program is called output_from_nre.txt
+
+### Process the output after running neutral region explorer program 
+
+>python calc_neutralregion_length.py output_from_nre.txt > output_from_nre_clean.txt
+
+* Output columns are (1) chr, (2) start, (3) end, (4) length, (5) rec, (6) bgs
+
+### Generate 10kb regions
+
+>python generate_Xkb_neutralRegions.py --input output_from_nre_clean.txt --length 10000 > 10kb_neutral_regions.txt
+
+* There are 3723 10kb windows
+
+### Divide into each chr
+
+
 
 ## Obtain nonoverlapping windows
 1. 
