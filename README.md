@@ -85,12 +85,22 @@ optional arguments:
 ** Output from the neutral region explorer program is called output_from_nre.txt
 
 ### Process the output after running neutral region explorer program 
+From the directory 1000G_Summary_Stats/data/10kb_neutral_regions, do:
 
->python calc_neutralregion_length.py output_from_nre.txt > output_from_nre_clean.txt
+>for i in {1..22}; do 
+>python ../../scripts/calc_neutralregion_length.py chr${i}_output_from_nre.txt > chr${i}_output_from_nre_clean.txt
+>done;
 
 * Output columns are (1) chr, (2) start, (3) end, (4) length, (5) rec, (6) bgs
 
 ### Generate 10kb regions
+From the directory 1000G_Summary_Stats/data/10kb_neutral_regions, do:
+
+>for i in {1..22}; do
+> python ../../scripts/generate_Xkb_neutralRegions.py --input chr${i}_output_from_nre_clean.txt --length 10000 > chr${i}_10kb_neutral_region.txt
+> done;
+
+
 
 >python generate_Xkb_neutralRegions.py --input output_from_nre_clean.txt --length 10000 > 10kb_neutral_regions.txt
 
