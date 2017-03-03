@@ -224,4 +224,13 @@ optional arguments:
 
 ##### Subset the VCF where homozygous sites have been removed AND only pass sites are retain to only include sites that fall within 10kb neutral regions
 
+>qsub wrapper_subsetVCF.basedOnPositions_YRI_for10kbNeutral.sh
+>qsub wrapper_subsetVCF.basedOnPositions_CEU_for10kbNeutral.sh
+>qsub wrapper_subsetVCF.basedOnPositions_CHB_for10kbNeutral.sh
+
+##### Estimate SFS
+
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_YRI.sh
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_CEU.sh
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_CHB.sh
 
