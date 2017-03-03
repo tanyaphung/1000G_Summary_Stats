@@ -72,10 +72,10 @@ optional arguments:
 2. Recombination rate (cM/Mb): 0.8
 3. Genetic map: Decode
 4. Human diversity: YRI; Individuals: All; Mask: Strict
+5. Min BG selection coefficient: 0.95
 
 **NOTE: when selecting human diversity, one has to choose either CEU, YRI, or CHB. The neutral regions will likely differ depending which population to choose. Therefore, should we have a consensus neutral regions for all three populations?**
 
-5. Min BG selection coefficient: 0.95
 
 ##### Select regions for which to calculate % overlap
 1. Simple repeats
@@ -99,16 +99,6 @@ From the directory 1000G_Summary_Stats/data/10kb_neutral_regions, do:
 >for i in {1..22}; do
 > python ../../scripts/generate_Xkb_neutralRegions.py --input chr${i}_output_from_nre_clean.txt --length 10000 > chr${i}_10kb_neutral_region.txt
 > done;
-
-
-
->python generate_Xkb_neutralRegions.py --input output_from_nre_clean.txt --length 10000 > 10kb_neutral_regions.txt
-
-* There are 3723 10kb windows
-
-### Divide into each chr
-
-
 
 ## Obtain nonoverlapping windows
 1. 
@@ -219,5 +209,19 @@ optional arguments:
 >./qsub vcftools_ld_CEU_geno.sh
 
 >./qsub vcftools_ld_CHB_geno.sh 
+
+### Compute genetic diversity in 10kb neutral regions
+* Scripts are stored in 1000G_Summary_Stats/scripts/compute_pi_neutral_regions
+
+### Estimate SFS using 10kb neutral regions
+* Note that here, I estimated the SFS using the 10kb neutral region. But, because the SFS does not need to be binned into windows, I could just compute the SFS using the output from the Neutral Region Explorer (maybe for later).
+
+##### Subset the VCF where homozygous sites have been removed to only include the Pass sites
+
+>qsub wrapper_subsetVCF.basedOnPositions_YRI_afterRmHom.sh
+>qsub wrapper_subsetVCF.basedOnPositions_CEU_afterRmHom.sh
+>qsub wrapper_subsetVCF.basedOnPositions_CHB_afterRmHom.sh
+
+##### Subset the VCF where homozygous sites have been removed AND only pass sites are retain to only include sites that fall within 10kb neutral regions
 
 
