@@ -6,8 +6,8 @@ with open(sys.argv[1], "r") as f:
 	for line in f:
 		line = line.rstrip("\n")
 		line = line.split("\t")
-		regionLen = float(line[2]) - float(line[1])
-		out.append([line[0], float(line[1]), float(line[2]), regionLen, float(line[6]), float(line[8])])
+		regionLen = int(line[2]) - int(line[1])
+		out.append([line[0], int(line[1]), int(line[2]), regionLen, float(line[6]), float(line[8])])
 header = ['chr', 'start', 'end', 'length', 'rec', 'bgs']
 print "\t".join(x for x in header)
 for i in out:

@@ -24,7 +24,7 @@ def parse_args():
 
 def main():
 	args = parse_args()
-	length = float(args.length)
+	length = int(args.length)
 
 	with open(args.input, "r") as f:
 		next(f)
@@ -32,7 +32,7 @@ def main():
 			line = line.rstrip("\n")
 			line = line.split("\t")
 			num = int(float(line[3])/length)
-			start = float(line[1])
+			start = int(line[1])
 			for i in range(1, num+1):
 				if i == 1:
 					end = start + length
