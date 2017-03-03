@@ -56,7 +56,7 @@ optional arguments:
   + wrapper_generate.foldedSFS.fromVCF_CEU.sh
   + wrapper_generate.foldedSFS.fromVCF_CHB.sh
 
-## Extract neutral regions using the program Neutral Region Explorer [Arbiza et al. 2012](http://nre.cb.bscb.cornell.edu/nre/)
+## Extract neutral regions using the program Neutral Region Explorer [Arbiza et al. 2012](http://nre.cb.bscb.cornell.edu/nre/). Output can be found in the directory data/10kb_neutral_regions.
 ### Filtering criteria:
 ##### Select Regions to Exclude: 
 1. Known genes 
@@ -72,8 +72,33 @@ optional arguments:
 2. Recombination rate (cM/Mb): 0.8
 3. Genetic map: Decode
 4. Human diversity: YRI; Individuals: All; Mask: Strict
+5. Min BG selection coefficient: 0.95
 
 **NOTE: when selecting human diversity, one has to choose either CEU, YRI, or CHB. The neutral regions will likely differ depending which population to choose. Therefore, should we have a consensus neutral regions for all three populations?**
+
+
+##### Select regions for which to calculate % overlap
+1. Simple repeats
+2. Repeat maskers v3.27
+3. 46 way conserved - plac mammal
+
+** Output from the neutral region explorer program is called output_from_nre.txt
+
+### Process the output after running neutral region explorer program 
+From the directory 1000G_Summary_Stats/data/10kb_neutral_regions, do:
+
+>for i in {1..22}; do 
+>python ../../scripts/calc_neutralregion_length.py chr${i}_output_from_nre.txt > chr${i}_output_from_nre_clean.txt
+>done;
+
+* Output columns are (1) chr, (2) start, (3) end, (4) length, (5) rec, (6) bgs
+
+### Generate 10kb regions
+From the directory 1000G_Summary_Stats/data/10kb_neutral_regions, do:
+
+>for i in {1..22}; do
+> python ../../scripts/generate_Xkb_neutralRegions.py --input chr${i}_output_from_nre_clean.txt --length 10000 > chr${i}_10kb_neutral_region.txt
+> done;
 
 ## Obtain nonoverlapping windows
 1. 
@@ -143,13 +168,12 @@ This script computes pairwise pi.
 >./vcftools_ld_CHB.sh
 
 ### Process files after VCFtools output
-1. ./processVCFLDoutputs.sh
 
-This script does the following:
-* Remove nan
-* Compute distance between SNPs, output only distance and rsquare
+1. ./processVCFLDoutputs.sh
+Remove nan
 
 2. To compute rsquared in bins:
+
 
 >python estimateLDdecay.py -h
 
@@ -186,4 +210,27 @@ optional arguments:
 
 >./qsub vcftools_ld_CHB_geno.sh 
 
+### Compute genetic diversity in 10kb neutral regions
+* Scripts are stored in 1000G_Summary_Stats/scripts/compute_pi_neutral_regions
+
+### Estimate SFS using 10kb neutral regions
+* Note that here, I estimated the SFS using the 10kb neutral region. But, because the SFS does not need to be binned into windows, I could just compute the SFS using the output from the Neutral Region Explorer (maybe for later).
+
+##### Subset the VCF where homozygous sites have been removed to only include the Pass sites
+
+>qsub wrapper_subsetVCF.basedOnPositions_YRI_afterRmHom.sh
+>qsub wrapper_subsetVCF.basedOnPositions_CEU_afterRmHom.sh
+>qsub wrapper_subsetVCF.basedOnPositions_CHB_afterRmHom.sh
+
+##### Subset the VCF where homozygous sites have been removed AND only pass sites are retain to only include sites that fall within 10kb neutral regions
+
+>qsub wrapper_subsetVCF.basedOnPositions_YRI_for10kbNeutral.sh
+>qsub wrapper_subsetVCF.basedOnPositions_CEU_for10kbNeutral.sh
+>qsub wrapper_subsetVCF.basedOnPositions_CHB_for10kbNeutral.sh
+
+##### Estimate SFS
+
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_YRI.sh
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_CEU.sh
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_CHB.sh
 
