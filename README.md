@@ -82,8 +82,6 @@ optional arguments:
 2. Repeat maskers v3.27
 3. 46 way conserved - plac mammal
 
-** Output from the neutral region explorer program is called output_from_nre.txt
-
 ### Process the output after running neutral region explorer program 
 From the directory 1000G_Summary_Stats/data/10kb_neutral_regions, do:
 
@@ -99,6 +97,36 @@ From the directory 1000G_Summary_Stats/data/10kb_neutral_regions, do:
 >for i in {1..22}; do
 > python ../../scripts/generate_Xkb_neutralRegions.py --input chr${i}_output_from_nre_clean.txt --length 10000 > chr${i}_10kb_neutral_region.txt
 > done;
+
+### Compute genetic diversity in 10kb neutral regions
+* Scripts are stored in 1000G_Summary_Stats/scripts/compute_pi_neutral_regions
+
+### Estimate SFS using 10kb neutral regions
+* Note that here, I estimated the SFS using the 10kb neutral region. But, because the SFS does not need to be binned into windows, I could just compute the SFS using the output from the Neutral Region Explorer (maybe for later).
+
+##### Subset the VCF where homozygous sites have been removed to only include the Pass sites
+
+>qsub wrapper_subsetVCF.basedOnPositions_YRI_afterRmHom.sh
+
+>qsub wrapper_subsetVCF.basedOnPositions_CEU_afterRmHom.sh
+
+>qsub wrapper_subsetVCF.basedOnPositions_CHB_afterRmHom.sh
+
+##### Subset the VCF where homozygous sites have been removed AND only pass sites are retain to only include sites that fall within 10kb neutral regions
+
+>qsub wrapper_subsetVCF.basedOnPositions_YRI_for10kbNeutral.sh
+
+>qsub wrapper_subsetVCF.basedOnPositions_CEU_for10kbNeutral.sh
+
+>qsub wrapper_subsetVCF.basedOnPositions_CHB_for10kbNeutral.sh
+
+##### Estimate SFS
+
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_YRI.sh
+
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_CEU.sh
+
+>./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_CHB.sh
 
 ## Obtain nonoverlapping windows
 1. 
@@ -210,27 +238,83 @@ optional arguments:
 
 >./qsub vcftools_ld_CHB_geno.sh 
 
-### Compute genetic diversity in 10kb neutral regions
-* Scripts are stored in 1000G_Summary_Stats/scripts/compute_pi_neutral_regions
+# Obtain genetic distance
+## Download genetic map
+* Working directory is `/u/home/p/phung428/tanya_data_storage/1000G_Summary_Stats/data/decode_genetic_map`
+```
+wget https://www.decode.com/additional/female_noncarrier.gmap
+wget https://www.decode.com/additional/male_noncarrier.gmap
+```
 
-### Estimate SFS using 10kb neutral regions
-* Note that here, I estimated the SFS using the 10kb neutral region. But, because the SFS does not need to be binned into windows, I could just compute the SFS using the output from the Neutral Region Explorer (maybe for later).
+## Process the genetic map data
+1. Because the files are not tab delimit, I need to convert the files to tab-delimit first
+```
+awk '{print$1"\t"$2"\t"$3"\t"$4}' female_noncarrier.gmap > female_noncarrier.gmap_tab
+awk '{print$1"\t"$2"\t"$3"\t"$4}' male_noncarrier.gmap > male_noncarrier.gmap_tab
+```
 
-##### Subset the VCF where homozygous sites have been removed to only include the Pass sites
+2. Partition into separate chromososomes
+```
+for i in {1..22}; do
+grep -w chr${i} female_noncarrier.gmap_tab > chr${i}_female_noncarrier.gmap
+grep -w chr${i} male_noncarrier.gmap_tab > chr${i}_male_noncarrier.gmap
+done;
+```
+3. Compute average genetic map:
 
->qsub wrapper_subsetVCF.basedOnPositions_YRI_afterRmHom.sh
->qsub wrapper_subsetVCF.basedOnPositions_CEU_afterRmHom.sh
->qsub wrapper_subsetVCF.basedOnPositions_CHB_afterRmHom.sh
+```
+./wrapper_average.genetic.map.sh
+```
 
-##### Subset the VCF where homozygous sites have been removed AND only pass sites are retain to only include sites that fall within 10kb neutral regions
+4. Mofification of last NA to 0 (more explanation here later)
 
->qsub wrapper_subsetVCF.basedOnPositions_YRI_for10kbNeutral.sh
->qsub wrapper_subsetVCF.basedOnPositions_CEU_for10kbNeutral.sh
->qsub wrapper_subsetVCF.basedOnPositions_CHB_for10kbNeutral.sh
+# Obtain recombination rate for each 10kb neutral loci
 
-##### Estimate SFS
+## Interpolate
+* Use the Python script `interpolate_genetic_distance.py`. Wrapper script to run across 22 chromosomes is `wrapper_interpolate_genetic_distance_10kbneutral.sh`
 
->./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_YRI.sh
->./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_CEU.sh
->./wrapper_generate.foldedSFS.fromVCF_10kbNeutral_CHB.sh
+```
+qsub wrapper_interpolate_genetic_distance_10kbneutral.sh
+```
+## Compute recombination (cM/Mb) for each 10kb neutral region
+* Use the Python script `compute_rec_10kb_neutral_region.py`. Wrapper script to run across 22 chromosomes is `wrapper_compute_rec_10kb_neutral_region.sh`
+
+```
+qsub wrapper_compute_rec_10kb_neutral_region.sh
+```
+
+# Convert physical distance to genetic distance from VCFtool output
+
+## From VCFtool output, for each chromosome, break into smaller files
+* Split each chromosome file so that each file contains 10,000,000 lines or less
+In the directory `/u/home/p/phung428/tanya_data_storage/1000G_Summary_Stats/results/LD_geno/VCFtools_out_rm.nan/YRI`, make some new directories:
+```
+for i in {1..22}; do mkdir chr${i}_split; done;
+```
+```
+split -l 10000000 chr1_LD_geno.geno.ld_rm.nan
+```
+* Note that right now I sort of have to do this manually. Should think about how to do this better. Also, I had to further split the files so that it contains about 3,000,000 lines or less.
+
+## Interpolate genetic map for 1000G SNP (to use to convert physical distance from VCFtool output to genetic distance)
+1. The goal here is to modify the genetic map from decode to also include SNPs from 1000 genomes. 
+2. The output is a file where the first row is the position (from decode and also 1000 genomes) and the second row is the cM (defined as the cM between the current SNP and the previous SNP)
+3. Use the Python script `interpolate_genetic_distance_LD.py`. Wrapper script to run across 22 chromosomes is `wrapper_interpolate.genetic.distance.LD.sh`
+
+```
+qsub wrapper_interpolate.genetic.distance.LD.sh
+```
+
+## Convert physical distance to genetic distance
+Since I run each chunk of each chromosome separately, I wrote a few wrapper scripts so that it can be run in parallel. All of the wrapper scripts are stored in the directory `wrapper_convert.physical.to.genetic`
+
+After that, I ran the Python script `estimateLDdecay_genetic.py` to bin. Specifically, I ran the wrapper script:
+
+```
+qsub wrapper_estimateLDdecay_genetic.sh
+```
+Then, tabulate across 22 chromosomes:
+```
+python tabulateMeanLD_geno_genetic.py  > /u/home/p/phung428/tanya_data_storage/1000G_Summary_Stats/results/LD_geno/bins_genetic/YRI/allChr_LD_genetic_bins
+```
 
