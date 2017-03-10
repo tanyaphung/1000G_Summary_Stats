@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "main.py", line 99, in <module>
-    main()
-  File "main.py", line 49, in main
-    callableSet.add(int(line))
-MemoryError
-cat: /u/home/p/phung428/tanya_data_storage/1000G_Summary_Stats/results/pi/100kb/CEU/chr2_10CEU_pi.txt: No such file or directory
