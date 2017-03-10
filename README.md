@@ -238,15 +238,15 @@ optional arguments:
 
 >./qsub vcftools_ld_CHB_geno.sh 
 
-# Obtain genetic distance
-## Download genetic map
+## Obtain genetic distance
+### Download genetic map
 * Working directory is `/u/home/p/phung428/tanya_data_storage/1000G_Summary_Stats/data/decode_genetic_map`
 ```
 wget https://www.decode.com/additional/female_noncarrier.gmap
 wget https://www.decode.com/additional/male_noncarrier.gmap
 ```
 
-## Process the genetic map data
+### Process the genetic map data
 1. Because the files are not tab delimit, I need to convert the files to tab-delimit first
 ```
 awk '{print$1"\t"$2"\t"$3"\t"$4}' female_noncarrier.gmap > female_noncarrier.gmap_tab
@@ -268,24 +268,24 @@ done;
 
 4. Mofification of last NA to 0 (more explanation here later)
 
-# Obtain recombination rate for each 10kb neutral loci
+## Obtain recombination rate for each 10kb neutral loci
 
-## Interpolate
+### Interpolate
 * Use the Python script `interpolate_genetic_distance.py`. Wrapper script to run across 22 chromosomes is `wrapper_interpolate_genetic_distance_10kbneutral.sh`
 
 ```
 qsub wrapper_interpolate_genetic_distance_10kbneutral.sh
 ```
-## Compute recombination (cM/Mb) for each 10kb neutral region
+### Compute recombination (cM/Mb) for each 10kb neutral region
 * Use the Python script `compute_rec_10kb_neutral_region.py`. Wrapper script to run across 22 chromosomes is `wrapper_compute_rec_10kb_neutral_region.sh`
 
 ```
 qsub wrapper_compute_rec_10kb_neutral_region.sh
 ```
 
-# Convert physical distance to genetic distance from VCFtool output
+## Convert physical distance to genetic distance from VCFtool output
 
-## From VCFtool output, for each chromosome, break into smaller files
+### From VCFtool output, for each chromosome, break into smaller files
 * Split each chromosome file so that each file contains 10,000,000 lines or less
 In the directory `/u/home/p/phung428/tanya_data_storage/1000G_Summary_Stats/results/LD_geno/VCFtools_out_rm.nan/YRI`, make some new directories:
 ```
@@ -296,7 +296,7 @@ split -l 10000000 chr1_LD_geno.geno.ld_rm.nan
 ```
 * Note that right now I sort of have to do this manually. Should think about how to do this better. Also, I had to further split the files so that it contains about 3,000,000 lines or less.
 
-## Interpolate genetic map for 1000G SNP (to use to convert physical distance from VCFtool output to genetic distance)
+### Interpolate genetic map for 1000G SNP (to use to convert physical distance from VCFtool output to genetic distance)
 1. The goal here is to modify the genetic map from decode to also include SNPs from 1000 genomes. 
 2. The output is a file where the first row is the position (from decode and also 1000 genomes) and the second row is the cM (defined as the cM between the current SNP and the previous SNP)
 3. Use the Python script `interpolate_genetic_distance_LD.py`. Wrapper script to run across 22 chromosomes is `wrapper_interpolate.genetic.distance.LD.sh`
@@ -305,7 +305,7 @@ split -l 10000000 chr1_LD_geno.geno.ld_rm.nan
 qsub wrapper_interpolate.genetic.distance.LD.sh
 ```
 
-## Convert physical distance to genetic distance
+### Convert physical distance to genetic distance
 Since I run each chunk of each chromosome separately, I wrote a few wrapper scripts so that it can be run in parallel. All of the wrapper scripts are stored in the directory `wrapper_convert.physical.to.genetic`
 
 After that, I ran the Python script `estimateLDdecay_genetic.py` to bin. Specifically, I ran the wrapper script:
