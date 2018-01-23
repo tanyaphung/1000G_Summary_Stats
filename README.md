@@ -28,7 +28,8 @@ To subset the 1000G vcf for each of these populations:
 * Use the Python script generate_foldedSFS_fromVCF.py
 * For usage:
 
->python generate_foldedSFS_fromVCF.py -h
+```
+python generate_foldedSFS_fromVCF.py -h
 
 usage: generate_foldedSFS_fromVCF.py [-h] --variant VARIANT --numAllele
                                      NUMALLELE --pass_coordinates
@@ -52,6 +53,8 @@ optional arguments:
                         obtain_pass_positions.py. The format is a genomic
                         coordinate per line.
   --outfile OUTFILE     REQUIRED. Name of the output file
+  
+  ```
 
 * For the exact file names and command, the files
   + wrapper_generate.foldedSFS.fromVCF_YRI.sh
